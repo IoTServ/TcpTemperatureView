@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>历史温度和实时温度</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <script src="static/js/echarts.js"></script>
+  <script src="static/js/jquery.min.js"></script>
+</head>
+
+<body>
+  <header>
+  </header>
+  <div id="chart" style="width: 1800px;height:400px;"></div>
+  <h1 id="newtemp"></h1>
+  <a href="/now">实时温度页</a>
+  <script type="application/javascript">
+      var myChart = echarts.init(document.getElementById('chart'));
+      setInterval(function () {
+          $.get('api/data').done(function (data) {
+              console.log(data);
+              var mydate = [];
+              var mydata = [];
+              $.each(data, function (n, value) {
+                  mydate.push(value.DATE.replace("+08:00", ""));
+                  mydata.push(value.VALUE);
+              });
+              newtemp = data[data.length - 1].VALUE;
+              var h1 = $("#newtemp").html("最新温度：" + newtemp+"℃");
+              myChart.setOption({
+                  title: {
+                      text: '温度历史'
+                  },
+                  tooltip: {
+                      trigger: 'axis'
+                  },
+                  legend: {
+                      data:['温度历史']
+                  },
+                  grid: {
+                      left: '3%',
+                      right: '4%',
+                      bottom: '3%',
+                      containLabel: true
+                  },
+                  toolbox: {
+                      feature: {
+                          saveAsImage: {}
+                      }
+                  },
+                  xAxis: {
+                      type: 'category',
+                      boundaryGap: false,
+                      data:mydate
+                  },
+                  yAxis: {
+                      type: 'value'
+                  },
+                  series: [
+                      {
+                          name:'温度历史',
+                          type:'line',
+                          stack: '温度',
+                          data:mydata
+                      }
+                  ]
+              });
+          });
+      },1000);
+  </script>
+  <footer>
+  </footer>
+</body>
+</html>

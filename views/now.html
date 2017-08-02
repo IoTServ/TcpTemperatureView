@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>实时温度</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <script src="static/js/jquery.min.js"></script>
+</head>
+
+<body>
+  <header>
+  </header>
+  <h1 id="newtemp"></h1>
+  <a href="/">首页</a>
+  <script type="application/javascript">
+      setInterval(function () {
+          $.get('api/data').done(function (data) {
+              console.log(data);
+              newtemp = data[data.length - 1].VALUE;
+              var h1 = $("#newtemp").html("最新温度：" + newtemp + "℃");
+          })
+      },1000);
+  </script>
+  <footer>
+  </footer>
+</body>
+</html>
